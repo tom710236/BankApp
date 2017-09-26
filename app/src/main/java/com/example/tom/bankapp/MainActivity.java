@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Toast.makeText(getApplicationContext(), position + "", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), itemName.get(position), Toast.LENGTH_SHORT).show();
         }
     }
 
