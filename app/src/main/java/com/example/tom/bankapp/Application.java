@@ -7,4 +7,6 @@ package com.example.tom.bankapp;
 public class Application extends android.app.Application {
 
     public static String FCMToken = "";
+    public static String WebUri = "";
+    public static String toolbarTitle = "投信APP";
 }

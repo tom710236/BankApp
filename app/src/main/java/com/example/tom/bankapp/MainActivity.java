@@ -6,11 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ckfree.common.SimpleSearchBar;
@@ -41,18 +44,54 @@ public class MainActivity extends AppCompatActivity {
     SimpleAdapter adapter;
     ArrayList<LinkedHashMap<String, String>> myList;
     LinkedHashMap<String, String> map;
-    // 九宮格全部功能的圖片
-    private int[] imageRes2 = {R.drawable.pig64, R.drawable.ic_search_black_24dp,
-            R.drawable.pig64, R.drawable.ic_search_black_24dp, R.drawable.ic_search_black_24dp, R.drawable.ic_search_black_24dp,
-            R.drawable.pig64, R.drawable.pig64, R.drawable.pig64};
+
+    int image = R.drawable.pig64
+            ,image2 = R.drawable.pig64
+            ,image3 = R.drawable.pig64
+            ,image4 = R.drawable.pig64
+            ,image5 = R.drawable.pig64
+            ,image6 = R.drawable.pig64
+            ,image7 = R.drawable.pig64
+            ,image8 = R.drawable.pig64
+            ,image9 = R.drawable.pig64;
+    String name = "审前调查"
+            ,name2 = "需求评估"
+            ,name3 = "在册人员"
+            ,name4 = "请销假"
+            ,name5 = "集中教育"
+            ,name6 = "个别教育"
+            ,name7 = "心理测评"
+            ,name8 = "生活量表"
+            ,name9 = "矫正方案";
+    Uri uri1 = Uri.parse("https://www.google.com.tw/")
+            ,uri2 = Uri.parse("http://barcode.tec-it.com/zh/Code128?data=94344068123")
+            ,uri3 = Uri.parse("http://news.ltn.com.tw/news/life/breakingnews/2206806")
+            ,uri4 = Uri.parse("http://givemepass-blog.logdown.com/posts/288946-book-list")
+            ,uri5 = Uri.parse("https://www.slideshare.net/rickwu12/ss-54297655")
+            ,uri6 = Uri.parse("http://demo.shinda.com.tw/PegionModernWebApi/login.aspx")
+            ,uri7 = Uri.parse("https://luolala.gitbooks.io/mystudynote/content/MobileWebDev/note.html")
+            ,uri8 = Uri.parse("http://news.ltn.com.tw/news/life/breakingnews/2206806")
+            ,uri9 = Uri.parse("http://news.ltn.com.tw/news/life/breakingnews/2206806");
+
     //九宮格全部功能
-    private String[] itemName2 = {"审前调查", "需求评估", "在册人员", "请销假", "集中教育",
-            "个别教育", "心理测评", "生活量表", "矫正方案"};
+    private String[] itemName2 = {name,name2,name3,name4,name5,name6,name7,name8,name9};
+    // 九宮格全部功能的圖片
+    private int[] imageRes2 = {image,image2,image3,image4,image5,image6,image7,image8,image9};
+    //九宮格預設功能
+    private String[] itemName3 = {name,name2,name3,name4,name5};
+    //九宮格預設功能的圖片
+    private int[] imageRes3 = {image,image2,image3,image4,image5};
+    //前往網址
+    private Uri[] uris = {uri1,uri2,uri3,uri4,uri5,uri6,uri7,uri8,uri9,} ;
+    //紀錄勾勾
     private HashSet<Integer> mCheckSet = new HashSet<Integer>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        toolBar();
 
         //預設九宮格的設定
         setmArrayList();
@@ -91,9 +130,46 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Toast.makeText(getApplicationContext(), itemName.get(position), Toast.LENGTH_SHORT).show();
+
+            switch (itemName.get(position)){
+                case "审前调查" :
+                    setmUri(0);
+                    break;
+                case "需求评估" :
+                    setmUri(1);
+                    break;
+                case "在册人员" :
+                    setmUri(2);
+                    break;
+                case "请销假" :
+                    setmUri(3);
+                    break;
+                case "集中教育" :
+                    setmUri(4);
+                    break;
+                case "个别教育" :
+                    setmUri(5);
+                    break;
+                case "心理测评" :
+                    setmUri(6);
+                    break;
+                case "生活量表" :
+                    setmUri(7);
+                    break;
+                case "矫正方案" :
+                    setmUri(8);
+                    break;
+
+            }
         }
     }
+    private void setmUri (int i){
+        Intent it = new Intent(this, WebViewActivity.class);
+        Application.WebUri = String.valueOf(uris[i]);
+        startActivity(it);
+        MainActivity.this.finish();
 
+    }
     private void mDialog(String message) {
         AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
         alertDlg.setTitle("您有一則新訊息");
@@ -208,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
             if (convertView == null) {
                 convertView = View.inflate(MainActivity.this, R.layout.item2, null);
                 final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.checkBox);
+                //留住勾勾
                 checkBox.setChecked(mCheckSet.contains(position));
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -233,12 +310,9 @@ public class MainActivity extends AppCompatActivity {
                                     i--;
                                 }
                             }
-
                         }
-
                     }
                 });
-
             }
             return super.getView(position, convertView, parent);
         }
@@ -294,26 +368,30 @@ public class MainActivity extends AppCompatActivity {
     private void setmArrayList(){
         //預設九宮格的功能
         itemName = new ArrayList<>();
+        imageRes = new ArrayList<>();
+        for(int i = 0 ; i<itemName3.length ; i++){
+            itemName.add(itemName3[i]);
+            imageRes.add(imageRes3[i]);
+            mCheckSet.add(i);
+        }
+
+        /*
         itemName.add("审前调查");
         itemName.add("需求评估");
         mCheckSet.add(0);
         mCheckSet.add(1);
-
         //預設九宮格圖片
         imageRes = new ArrayList<>();
         imageRes.add(R.drawable.pig64);
-        imageRes.add(R.drawable.ic_search_black_24dp);
+        imageRes.add(R.drawable.pig64);
+        */
     }
-    private void setmCheckboxFirst(){
-        final CheckBox checkBox = (CheckBox)findViewById(R.id.checkBox);
-        for(int i = 0 ; i<itemName.size();i++){
-            if(myList.get(i).get("1").equals(itemName.get(i))){
-                Log.e("相同",myList.get(i).get("1"));
-                Log.e("mcheck", String.valueOf(mCheckSet));
-
-
-            }
-        }
-
+    private void toolBar() {
+        //Toolbar 設定
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        TextView textView = (TextView)findViewById(R.id.textTitle);
+        textView.setText(Application.toolbarTitle);
     }
 }
