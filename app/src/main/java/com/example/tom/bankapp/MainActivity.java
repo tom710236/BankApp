@@ -16,12 +16,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +38,10 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+//import android.support.v7.widget.SearchView;
+
+
 
 public class MainActivity extends AppCompatActivity {
     String token = "null";
@@ -81,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
     private String[] itemName3 = {name,name2,name3,name4,name5};
     //九宮格預設功能的圖片
     private int[] imageRes3 = {image,image2,image3,image4,image5};
+    //九宮格登入後功能
+    private String[] itemName4;
+    //九宮格登入後的圖片
+    private int[] imageRes4;
     //前往網址
     private Uri[] uris = {uri1,uri2,uri3,uri4,uri5,uri6,uri7,uri8,uri9,} ;
     //紀錄勾勾
@@ -89,7 +101,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_main);
+
+
 
         toolBar();
 
@@ -121,9 +136,15 @@ public class MainActivity extends AppCompatActivity {
         //新增我的最愛
         setmListView();
 
+        if (Application.Login == true) {
+            ImageButton button = (ImageButton)findViewById(R.id.imageButton);
+            button.setVisibility(View.VISIBLE);
+            Button button1 = (Button)findViewById(R.id.button4);
+            button1.setText("登出");
+        }
+        setSeachView();
 
     }
-
     //定义九宮格点击事件监听器
     public class GridViewItemOnClick implements AdapterView.OnItemClickListener {
 
@@ -271,6 +292,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void onLogin(View v){
+        if(Application.Login == false){
+            Intent it = new Intent(this , LoginActivity.class);
+            startActivity(it);
+            MainActivity.this.finish();
+
+        }else {
+            Application.Login = false;
+            Intent it = new Intent(this , MainActivity.class);
+            startActivity(it);
+            MainActivity.this.finish();
+        }
+
+    }
+
     public class SpecialAdapter extends SimpleAdapter {
 
         public SpecialAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
@@ -338,7 +374,9 @@ public class MainActivity extends AppCompatActivity {
         mGridView.setOnItemClickListener(new GridViewItemOnClick());
     }
     private void setmSearch(){
-        SimpleSearchBar mysearchbar = (SimpleSearchBar) findViewById(R.id.mysearchbar);
+        final SimpleSearchBar mysearchbar = (SimpleSearchBar) findViewById(R.id.mysearchbar);
+
+        /*
         View displayview = findViewById(R.id.imageView7);//跟随searchbar显示隐藏的view
         mysearchbar.init(displayview, new SimpleSearchBar.SearchBarWathcer() {
             @Override
@@ -346,7 +384,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
             }
         });
+        */
     }
+
 
     private void setmListView(){
         myList = new ArrayList();
@@ -365,16 +405,31 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
     }
-    private void setmArrayList(){
+    private void setmArrayList() {
         //預設九宮格的功能
         itemName = new ArrayList<>();
         imageRes = new ArrayList<>();
-        for(int i = 0 ; i<itemName3.length ; i++){
-            itemName.add(itemName3[i]);
-            imageRes.add(imageRes3[i]);
-            mCheckSet.add(i);
+        //未登入
+        if (Application.Login == false) {
+            for (int i = 0; i < itemName3.length; i++) {
+                itemName.add(itemName3[i]);
+                imageRes.add(imageRes3[i]);
+                mCheckSet.add(i);
+            }
+        //已登入
+        } else {
+            itemName4 = Application.itemName4;
+            imageRes4 = Application.imageRes4;
+            Log.e("itemName4", String.valueOf(itemName4[0]));
+            for (int i = 0; i < itemName4.length; i++) {
+                itemName.add(itemName4[i]);
+                imageRes.add(imageRes4[i]);
+                mCheckSet.add(i);
+            }
+
         }
 
+    }
         /*
         itemName.add("审前调查");
         itemName.add("需求评估");
@@ -385,7 +440,6 @@ public class MainActivity extends AppCompatActivity {
         imageRes.add(R.drawable.pig64);
         imageRes.add(R.drawable.pig64);
         */
-    }
     private void toolBar() {
         //Toolbar 設定
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -394,4 +448,34 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = (TextView)findViewById(R.id.textTitle);
         textView.setText(Application.toolbarTitle);
     }
+
+    private void setSeachView(){
+
+        final SearchView mSearchView = (SearchView)findViewById(R.id.search);
+        mSearchView.setIconifiedByDefault(true);
+        mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.onActionViewExpanded();
+        //mSearchView.setBackgroundColor(0x22ff00ff);
+        mSearchView.setIconifiedByDefault(true);
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                Toast.makeText(MainActivity.this,query,Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+
+    }
+
+
+
+
 }

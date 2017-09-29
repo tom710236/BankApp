@@ -63,38 +63,6 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/linear"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3"
-        android:background="@drawable/pig64"
-        android:orientation="vertical"
-        android:visibility="visible">
-
-        <ImageView
-            android:id="@+id/imageView7"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="0.14"
-            app:srcCompat="@drawable/pig64" />
-
-        <com.ckfree.common.SimpleSearchBar
-            android:id="@+id/mysearchbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="0dp"
-            app:mCancelText="cancel"
-            app:mCancelTextColor="#123456"
-            app:mCancelTextSize="6sp"
-            app:mHintColor="#123456"
-            app:mHintSize="6sp"
-            app:mHintText="Search..."
-            app:mTextColor="#123456"
-            app:mTextSize="6sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/linear2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -106,24 +74,64 @@
 
         <Button
             android:id="@+id/button4"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="onLogin"
             android:text="登入" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+        <SearchView
+            android:id="@+id/search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:actionViewClass="android.support.v7.widget.SearchView"
+            android:searchMode="queryRewriteFromText" />
+
+        <com.ckfree.common.SimpleSearchBar
+            android:id="@+id/mysearchbar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:paddingLeft="0dp"
+            android:visibility="gone"
+            app:mCancelText="cancel"
+            app:mCancelTextColor="#123456"
+            app:mCancelTextSize="6sp"
+            app:mHintColor="#123456"
+            app:mHintSize="6sp"
+            app:mHintText="Search..."
+            app:mTextColor="#123456"
+            app:mTextSize="6sp" />
 
         <ImageButton
             android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onAdd"
+            android:visibility="gone"
             app:srcCompat="@android:drawable/ic_input_add" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:background="@drawable/pig64"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.14"
+            app:srcCompat="@drawable/pig64" />
 
     </LinearLayout>
 
