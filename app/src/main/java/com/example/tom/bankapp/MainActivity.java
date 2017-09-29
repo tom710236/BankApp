@@ -303,6 +303,7 @@ public class MainActivity extends AppCompatActivity {
             Intent it = new Intent(this , MainActivity.class);
             startActivity(it);
             MainActivity.this.finish();
+            overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         }
 
     }

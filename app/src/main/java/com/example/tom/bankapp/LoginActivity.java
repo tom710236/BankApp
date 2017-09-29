@@ -75,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent it = new Intent(this,MainActivity.class);
         startActivity(it);
         LoginActivity.this.finish();
+
     }
 
     public void onLogin (View v){
@@ -95,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
 
             startActivity(it);
             LoginActivity.this.finish();
+
         }else {
             Toast.makeText(this,"登入失敗",Toast.LENGTH_SHORT).show();
         }
