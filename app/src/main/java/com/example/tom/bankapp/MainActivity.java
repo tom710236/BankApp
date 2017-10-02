@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -39,6 +41,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.tom.bankapp.R.drawable.pig64;
+
+//註解調才不會報錯
 //import android.support.v7.widget.SearchView;
 
 
@@ -53,15 +58,15 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<LinkedHashMap<String, String>> myList;
     LinkedHashMap<String, String> map;
 
-    int image = R.drawable.pig64
-            ,image2 = R.drawable.pig64
-            ,image3 = R.drawable.pig64
-            ,image4 = R.drawable.pig64
-            ,image5 = R.drawable.pig64
-            ,image6 = R.drawable.pig64
-            ,image7 = R.drawable.pig64
-            ,image8 = R.drawable.pig64
-            ,image9 = R.drawable.pig64;
+    int image = pig64
+            ,image2 = pig64
+            ,image3 = pig64
+            ,image4 = pig64
+            ,image5 = pig64
+            ,image6 = pig64
+            ,image7 = pig64
+            ,image8 = pig64
+            ,image9 = pig64;
     String name = "审前调查"
             ,name2 = "需求评估"
             ,name3 = "在册人员"
@@ -78,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
             ,uri5 = Uri.parse("https://www.slideshare.net/rickwu12/ss-54297655")
             ,uri6 = Uri.parse("http://demo.shinda.com.tw/PegionModernWebApi/login.aspx")
             ,uri7 = Uri.parse("https://luolala.gitbooks.io/mystudynote/content/MobileWebDev/note.html")
-            ,uri8 = Uri.parse("http://news.ltn.com.tw/news/life/breakingnews/2206806")
-            ,uri9 = Uri.parse("http://news.ltn.com.tw/news/life/breakingnews/2206806");
+            ,uri8 = Uri.parse("https://jerrynest.io/app-android-webview/")
+            ,uri9 = Uri.parse("https://juejin.im/entry/5780b8481532bc005f2b81f3");
 
     //九宮格全部功能
     private String[] itemName2 = {name,name2,name3,name4,name5,name6,name7,name8,name9};
@@ -98,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
     //紀錄勾勾
     private HashSet<Integer> mCheckSet = new HashSet<Integer>();
 
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-
+        setButton(findViewById(R.id.Login),Application.MainLoginTextSize,Application.MainLoginTextColor,Application.MainLoginBackgroundColor);
+        setLinearLayout();
         toolBar();
 
         //預設九宮格的設定
@@ -139,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         if (Application.Login == true) {
             ImageButton button = (ImageButton)findViewById(R.id.imageButton);
             button.setVisibility(View.VISIBLE);
-            Button button1 = (Button)findViewById(R.id.button4);
+            Button button1 = (Button)findViewById(R.id.Login);
             button1.setText("登出");
         }
         setSeachView();
@@ -389,7 +397,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setmListView(){
+    private void setmListView() {
         myList = new ArrayList();
         for (int i = 0; i < itemName2.length; i++) {
             map = new LinkedHashMap<String, String>();
@@ -427,9 +435,7 @@ public class MainActivity extends AppCompatActivity {
                 imageRes.add(imageRes4[i]);
                 mCheckSet.add(i);
             }
-
         }
-
     }
         /*
         itemName.add("审前调查");
@@ -442,12 +448,19 @@ public class MainActivity extends AppCompatActivity {
         imageRes.add(R.drawable.pig64);
         */
     private void toolBar() {
+
         //Toolbar 設定
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
+
         setSupportActionBar(toolbar);
         TextView textView = (TextView)findViewById(R.id.textTitle);
-        textView.setText(Application.toolbarTitle);
+
+        toolbar.setBackgroundColor(Application.MainToolbarBackGroundColor);
+        textView.setText(Application.MainToolbarText);
+        textView.setTextColor(Application.MainToolbarTextColor);
+        textView.setTextSize(Application.MainToolbarTextSize);
+
     }
 
     private void setSeachView(){
@@ -473,7 +486,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    private void setButton (View v ,int TextSize ,int TextColor ,int BackgroundColor ){
+        Button button = (Button)v ;
+        button.setTextSize(TextSize);
+        button.setTextColor(TextColor);
+        //button.setBackgroundColor(BackgroundColor);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void setLinearLayout (){
+        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linear);
+        linearLayout.setBackground(getResources().getDrawable(Application.MainBackgroundPicture));
     }
 
 

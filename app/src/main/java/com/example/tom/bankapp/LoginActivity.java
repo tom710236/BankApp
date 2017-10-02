@@ -2,10 +2,13 @@ package com.example.tom.bankapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     private int[] imageRes4 = {image,image2,image3,image4,image5,image6,image7,image8,image9};
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +55,11 @@ public class LoginActivity extends AppCompatActivity {
         uId.setText(setting.getString("userName", ""));
         toolBar();
 
+
         checkBox = (CheckBox)findViewById(R.id.checkBox2);
         editName = (EditText)findViewById(R.id.editText);
+
+        editName.setBackground(getResources().getDrawable(R.drawable.edittext));
 
         if(editName.getText().toString().length()> 0){
             checkBox.setChecked(true);
@@ -60,6 +67,8 @@ public class LoginActivity extends AppCompatActivity {
             checkBox.setChecked(false);
         }
 
+        setButton(findViewById(R.id.cancel),Application.LoginCancelTextSize,Application.LoginCancelTextColor,Application.LoginCancelBackgroundColor);
+        setButton(findViewById(R.id.Login),Application.LoginLoginTextSize,Application.LoginLoginTextColor,Application.LoginLoginBackgroundColor);
     }
 
     private void toolBar() {
@@ -68,7 +77,10 @@ public class LoginActivity extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         TextView textView = (TextView)findViewById(R.id.textTitle);
-        textView.setText(Application.toolbarTitle);
+        textView.setText(Application.LoginToolbarText);
+        toolbar.setBackgroundColor(Application.LoginToolbarBackGroundColor);
+        textView.setTextColor(Application.LoginToolbarTextColor);
+        textView.setTextSize(Application.LoginToolbarTextSize);
     }
 
     public void onCancel (View v){
@@ -91,9 +103,7 @@ public class LoginActivity extends AppCompatActivity {
             Application.itemName4 = itemName4;
             Application.imageRes4 = imageRes4;
             checkBox = (CheckBox)findViewById(R.id.checkBox2);
-
             setCheckbox();
-
             startActivity(it);
             LoginActivity.this.finish();
 
@@ -118,5 +128,14 @@ public class LoginActivity extends AppCompatActivity {
             cName = null;
         }
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void setButton (View v , int TextSize , int TextColor , int BackgroundColor ){
+        Button button = (Button)v ;
+        button.setTextSize(TextSize);
+        button.setTextColor(TextColor);
+
+        button.setBackground(getResources().getDrawable(R.drawable.button));
     }
 }

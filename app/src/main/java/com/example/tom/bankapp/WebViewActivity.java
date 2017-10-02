@@ -60,8 +60,10 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
         TextView textView = (TextView)findViewById(R.id.textTitle);
-        textView.setText(Application.toolbarTitle);
-
+        textView.setText(Application.webToolbarText);
+        toolbar.setBackgroundColor(Application.webToolbarBackGroundColor);
+        textView.setTextColor(Application.webToolbarTextColor);
+        textView.setTextSize(Application.webToolbarTextSize);
     }
 
     //設定返回鍵
