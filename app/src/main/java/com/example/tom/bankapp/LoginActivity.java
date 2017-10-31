@@ -14,33 +14,54 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static com.example.tom.bankapp.R.drawable.f1;
+import static com.example.tom.bankapp.R.drawable.f2;
+import static com.example.tom.bankapp.R.drawable.f3;
+import static com.example.tom.bankapp.R.drawable.f4;
+import static com.example.tom.bankapp.R.drawable.f5;
+import static com.example.tom.bankapp.R.drawable.f6;
+import static com.example.tom.bankapp.R.drawable.f7;
+import static com.example.tom.bankapp.R.drawable.f8;
+import static com.example.tom.bankapp.R.drawable.pig64;
+
 public class LoginActivity extends AppCompatActivity {
     EditText editName ,editNumber;
     String cName , cNumber;
     CheckBox checkBox;
-    int image = R.drawable.pig64
-            ,image2 = R.drawable.pig64
-            ,image3 = R.drawable.pig64
-            ,image4 = R.drawable.pig64
-            ,image5 = R.drawable.pig64
-            ,image6 = R.drawable.pig64
-            ,image7 = R.drawable.pig64
-            ,image8 = R.drawable.pig64
-            ,image9 = R.drawable.pig64;
-    String name = "审前调查"
-            ,name2 = "需求评估"
-            ,name3 = "在册人员"
-            ,name4 = "请销假"
-            ,name5 = "集中教育"
-            ,name6 = "个别教育"
-            ,name7 = "心理测评"
-            ,name8 = "生活量表"
-            ,name9 = "矫正方案";
+    int image = f1
+            ,image2 = f2
+            ,image3 = f3
+            ,image4 = f4
+            ,image5 = f5
+            ,image6 = f6
+            ,image7 = f7
+            ,image8 = f8
+            ,image9 = pig64
+            ,image10 = pig64
+            ,image11 = pig64
+            ,image12 = pig64
+            ,image13 = pig64
+            ,image14 = pig64
+            ,image15 = pig64;
+    String name = "最新消息"
+            ,name2 = "基金淨值"
+            ,name3 = "優惠好康"
+            ,name4 = "基金交易"
+            ,name5 = "到價通知"
+            ,name6 = "關注基金"
+            ,name7 = "理財講堂"
+            ,name8 = "關於我們"
+            ,name9 = "線上客服"
+            ,name10 = "線上開戶"
+            ,name11 = "我要開戶"
+            ,name12 = "配息一欄表"
+            ,name13 = "基金手續費一欄表"
+            ,name14 = "理財講座報名查詢"
+            ,name15 = "投資試算";
 
-    //九宮格全部功能
-    private String[] itemName4 = {name,name2,name3,name4,name5,name6,name7,name8,name9};
-    // 九宮格全部功能的圖片
-    private int[] imageRes4 = {image,image2,image3,image4,image5,image6,image7,image8,image9};
+    //登入後 預設功能
+    private String[] itemName4 = {name,name2,name3,name4,name5,name6,name7,name8};
+    private int[] imageRes4 = {image,image2,image3,image4,image5,image6,image7,image8};
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -84,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onCancel (View v){
-        Intent it = new Intent(this,MainActivity.class);
+        Intent it = new Intent(this,Navigation.class);
         startActivity(it);
         LoginActivity.this.finish();
 
@@ -99,11 +120,14 @@ public class LoginActivity extends AppCompatActivity {
         //登入判斷
         if(cName.equals("tom") && cNumber.equals("123")){
             Application.Login = true;
-            Intent it = new Intent(this,MainActivity.class);
+            Intent it = new Intent(this,Navigation.class);
+            //登入後預設功能
             Application.itemName4 = itemName4;
             Application.imageRes4 = imageRes4;
+            //是否記住帳號
             checkBox = (CheckBox)findViewById(R.id.checkBox2);
             setCheckbox();
+            //登入後回到首頁
             startActivity(it);
             LoginActivity.this.finish();
 

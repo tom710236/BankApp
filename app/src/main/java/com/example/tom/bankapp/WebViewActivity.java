@@ -12,7 +12,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class WebViewActivity extends AppCompatActivity {
     WebView webview;
@@ -54,7 +53,7 @@ public class WebViewActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WebViewActivity.this, MainActivity.class);
+                Intent intent = new Intent(WebViewActivity.this, Navigation.class);
                 startActivity(intent);
                 WebViewActivity.this.finish();
             }
@@ -75,12 +74,17 @@ public class WebViewActivity extends AppCompatActivity {
             if(webview.canGoBack()){
                 webview.goBack();
             }else {
-                Toast.makeText(this,"無上一頁",Toast.LENGTH_SHORT).show();
-                return true;
+                Intent intent = new Intent(WebViewActivity.this, Navigation.class);
+                startActivity(intent);
+                WebViewActivity.this.finish();
+
             }
 
         }
         //return super.onKeyDown(keyCode, event);
         return false;
     }
+
+
+
 }

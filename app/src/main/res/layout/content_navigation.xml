@@ -1,121 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingEnd="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:weightSum="1"
-    tools:context="com.example.tom.bankapp.MainActivity">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.tom.bankapp.Navigation"
+    tools:showIn="@layout/app_bar_navigation">
 
-    <FrameLayout
+    <TextView
+        android:id="@+id/textView9"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:elevation="0dp"
-            android:gravity="center"
-            android:minHeight="56dp">
-
-        </android.support.v7.widget.Toolbar>
-
-        <TextView
-            android:id="@+id/textTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:layout_gravity="top|center_horizontal"
-            android:gravity="center_horizontal|center"
-            android:textColor="#000000"
-            android:textSize="18sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="4"
-                android:orientation="horizontal"></LinearLayout>
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1.00"
-                android:gravity="right|center"
-                android:textColor="#000000"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/linear2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:visibility="visible">
-
-        <Button
-            android:id="@+id/Login"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onLogin"
-            android:radius="20dp"
-            android:text="登入" />
-
-        <SearchView
-            android:id="@+id/search"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:actionViewClass="android.support.v7.widget.SearchView"
-            android:searchMode="queryRewriteFromText" />
-
-        <com.ckfree.common.SimpleSearchBar
-            android:id="@+id/mysearchbar"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:paddingLeft="0dp"
-            android:visibility="gone"
-            app:mCancelText="cancel"
-            app:mCancelTextColor="#123456"
-            app:mCancelTextSize="6sp"
-            app:mHintColor="#123456"
-            app:mHintSize="6sp"
-            app:mHintText="Search..."
-            app:mTextColor="#123456"
-            app:mTextSize="6sp" />
-
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onAdd"
-            android:visibility="gone"
-            app:srcCompat="@android:drawable/ic_input_add" />
-
-    </LinearLayout>
+        android:layout_height="56dp"
+        android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/linear"
@@ -137,13 +35,70 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linear2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_weight="0.1"
+        android:background="#000093"
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:visibility="visible">
+
+        <SearchView
+            android:id="@+id/search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="0.5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="3"
+            android:actionViewClass="android.support.v7.widget.SearchView"
+            android:background="@color/white"
+            android:contextClickable="false"
+            android:searchMode="queryRewriteFromText"
+            android:queryHint="請輸入收尋文字"
+            	/>
+
+        <com.ckfree.common.SimpleSearchBar
+            android:id="@+id/mysearchbar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:paddingLeft="0dp"
+            android:visibility="gone"
+            app:mCancelText="cancel"
+            app:mCancelTextColor="#123456"
+            app:mCancelTextSize="6sp"
+            app:mHintColor="#123456"
+            app:mHintSize="6sp"
+            app:mHintText="Search..."
+            app:mTextColor="#123456"
+            app:mTextSize="6sp" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="#00000000"
+            android:onClick="onAdd"
+            android:paddingLeft="4dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/add_btn" />
+
+    </LinearLayout>
+
     <ScrollView
         android:id="@+id/linear3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_weight="0.6"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
         android:visibility="visible">
 
         <LinearLayout
@@ -154,13 +109,14 @@
             <GridView
                 android:id="@+id/MyGridView"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="330dp"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="10dp"
                 android:columnWidth="90dp"
+                android:fadeScrollbars="false"
                 android:gravity="center"
                 android:horizontalSpacing="10dp"
-                android:numColumns="auto_fit"
+                android:numColumns="3"
+                android:scrollbars="none"
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="10dp"></GridView>
         </LinearLayout>
@@ -196,5 +152,4 @@
                 android:visibility="visible" />
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

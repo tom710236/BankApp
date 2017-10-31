@@ -67,15 +67,15 @@ public class MainActivity extends AppCompatActivity {
             ,image7 = pig64
             ,image8 = pig64
             ,image9 = pig64;
-    String name = "审前调查"
-            ,name2 = "需求评估"
-            ,name3 = "在册人员"
-            ,name4 = "请销假"
-            ,name5 = "集中教育"
-            ,name6 = "个别教育"
-            ,name7 = "心理测评"
-            ,name8 = "生活量表"
-            ,name9 = "矫正方案";
+    String name = "線上開戶"
+            ,name2 = "關注基金"
+            ,name3 = "理財講座"
+            ,name4 = "配息一欄表"
+            ,name5 = "基金手續費一欄表"
+            ,name6 = "投資試算"
+            ,name7 = "最新消息"
+            ,name8 = "基金交易"
+            ,name9 = "關於我們";
     Uri uri1 = Uri.parse("https://www.google.com.tw/")
             ,uri2 = Uri.parse("http://barcode.tec-it.com/zh/Code128?data=94344068123")
             ,uri3 = Uri.parse("http://news.ltn.com.tw/news/life/breakingnews/2206806")
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //九宮格的設定
-        setmGridView();
+        //setmGridView();
         //新增我的最愛
         setmListView();
 
@@ -368,6 +368,8 @@ public class MainActivity extends AppCompatActivity {
         //九宮格的設定
         mGridView = (GridView) findViewById(R.id.MyGridView);
         List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
+        itemName = Application.itemName;
+        imageRes = Application.imageRes;
         int length = itemName.size();
         for (int i = 0; i < length; i++) {
             HashMap<String, Object> map = new HashMap<String, Object>();
