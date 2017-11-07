@@ -55,6 +55,12 @@ public class WebViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(WebViewActivity.this, Navigation.class);
                 startActivity(intent);
+                if(Application.Login == false && Application.Login2 ==false){
+                    Application.Web = false;
+                }else {
+                    Application.Web = true;
+                }
+
                 WebViewActivity.this.finish();
             }
         });
@@ -76,6 +82,7 @@ public class WebViewActivity extends AppCompatActivity {
             }else {
                 Intent intent = new Intent(WebViewActivity.this, Navigation.class);
                 startActivity(intent);
+                Application.Web = true;
                 WebViewActivity.this.finish();
 
             }

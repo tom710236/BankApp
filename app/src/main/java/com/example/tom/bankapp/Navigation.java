@@ -14,8 +14,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +31,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -36,6 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -58,11 +65,12 @@ public class Navigation extends AppCompatActivity
     String token = "null";
     SQLiteDatabase db;
     GridView mGridView;
-
+    MyAdapter myAdapter;
+    private ArrayList<String> myDataset;
     public class ItemInfo {
-        private String mItemName;
-        private int mItemImage;
-        private Uri mItemUrl;
+        public String mItemName;
+        public int mItemImage;
+        public Uri mItemUrl;
 
         ItemInfo(String ItemName, int ItemImage, Uri ItemUrl){
             this.mItemName = ItemName;
@@ -75,7 +83,7 @@ public class Navigation extends AppCompatActivity
     SimpleAdapter adapter;
 
     ArrayList<LinkedHashMap<String, String>> myList;
-    ArrayList<ItemInfo> itemInfoArray,itemInfoArrayList2,itemInfoArrayList3,itemInfoArrayList4;
+    ArrayList<ItemInfo> itemInfoArray,itemInfoArrayList2,itemInfoArrayList4;
     LinkedHashMap<String, String> map;
     Boolean add = false;
 
@@ -107,8 +115,8 @@ public class Navigation extends AppCompatActivity
             ,name9 = "線上開戶"
             ,name10 = "我要開戶"
             ,name11 = "配息一欄表"
-            ,name12 = "基金手續費一欄表"
-            ,name13 = "理財講座報名查詢"
+            ,name12 = "基金手續費\n"+"一欄表"
+            ,name13 = "理財講座報\n"+"名查詢"
             ,name14 = "投資試算";
 
 
@@ -147,13 +155,6 @@ public class Navigation extends AppCompatActivity
     //紀錄勾勾
     private HashSet<Integer> mCheckSet = new HashSet<Integer>();
 
-
-
-
-
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,15 +166,17 @@ public class Navigation extends AppCompatActivity
         setmListView();
         toolBar();
         setmArrayList();
-        setmGridView();
+        //setmGridView();
         setmListView2();
         setSeachView();
         setLinearLayout();
         //啟動service 讓7.0的手機可以常駐後台
         Intent it = new Intent(Navigation.this, Delay.class);
         startService(it);
-        setMyGridView();
+        //setMyGridView();
 
+        setRecyclerView();
+        setMyRecycleView();
         if (Application.Login == true) {
             ImageButton button = (ImageButton)findViewById(R.id.imageButton);
             button.setVisibility(View.VISIBLE);
@@ -380,6 +383,7 @@ public class Navigation extends AppCompatActivity
             //把未登入的預設值放入
             for(int i = 0 ; i< itemName3.length; i++){
                 itemInfoArrayList4.add(new ItemInfo(itemName3[i],imageRes3[i],uris[i]));
+
                 //mCheckSet.add(i);
             }
 
@@ -553,6 +557,8 @@ public class Navigation extends AppCompatActivity
             setmListView2();
             Application.Login = false;
             Intent it = new Intent(this , Navigation.class);
+            Application.Web = false;
+            Application.Login2 = false;
             startActivity(it);
             Navigation.this.finish();
             overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
@@ -566,9 +572,11 @@ public class Navigation extends AppCompatActivity
         LinearLayout linear2 = (LinearLayout) findViewById(R.id.linear2);
         ScrollView linear3 = (ScrollView) findViewById(R.id.linear3);
         ScrollView linear4 = (ScrollView) findViewById(R.id.linear4);
+        ScrollView linear5 = (ScrollView) findViewById(R.id.linear5);
         linear.setVisibility(View.GONE);
         linear2.setVisibility(View.GONE);
         linear3.setVisibility(View.GONE);
+        linear5.setVisibility(View.GONE);
         linear4.setVisibility(View.VISIBLE);
     }
 
@@ -577,14 +585,17 @@ public class Navigation extends AppCompatActivity
         LinearLayout linear2 = (LinearLayout) findViewById(R.id.linear2);
         ScrollView linear3 = (ScrollView) findViewById(R.id.linear3);
         ScrollView linear4 = (ScrollView) findViewById(R.id.linear4);
+        ScrollView linear5 = (ScrollView) findViewById(R.id.linear5);
         linear.setVisibility(View.VISIBLE);
         linear2.setVisibility(View.VISIBLE);
         linear3.setVisibility(View.VISIBLE);
+        linear5.setVisibility(View.VISIBLE);
         linear4.setVisibility(View.GONE);
-        setmGridView();
+
         add = true;
         Application.add = add;
-        adapter.notifyDataSetChanged();
+        //adapter.notifyDataSetChanged();
+        myAdapter.notifyDataSetChanged();
     }
     // 新增我的最愛的list
     private void setmListView2() {
@@ -705,7 +716,11 @@ public class Navigation extends AppCompatActivity
         GridView gridView = (GridView)findViewById(R.id.MyGridView);
         gridView.setBackgroundColor(0x99e4ecee);
     }
-
+    //設定背景顏色
+    private void setMyRecycleView(){
+        ScrollView linear5 = (ScrollView) findViewById(R.id.linear5);
+        linear5.setBackgroundColor(0x99e4ecee);
+    }
     private void setItem(){
         //全部
         itemInfoArray = new ArrayList<>();
@@ -723,6 +738,238 @@ public class Navigation extends AppCompatActivity
     }
 
 
+    private void setRecyclerView(){
 
+        if(itemInfoArrayList4.size()!=0){
+            myAdapter = new MyAdapter(itemInfoArrayList4);
+        }
+
+        RecyclerView mList = (RecyclerView) findViewById(R.id.list_view);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        mList.setLayoutManager(layoutManager);
+        mList.setAdapter(myAdapter);
+
+        /*
+        ItemTouchHelper.Callback mCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP|ItemTouchHelper.DOWN|ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT,ItemTouchHelper.START|ItemTouchHelper.END) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                int fromPosition = viewHolder.getAdapterPosition();
+                int toPosition = target.getAdapterPosition();
+                myAdapter.notifyItemMoved(fromPosition, toPosition);
+
+                return true;
+            }
+
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeMovementFlags(getDragDirs(recyclerView, viewHolder), getSwipeDirs(recyclerView, viewHolder));
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                myDataset.remove(position);
+                myAdapter.notifyItemRemoved(position);
+
+
+            }
+
+            @Override
+            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+                if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+                    //给被拖曳的 item 设置一个深颜色背景
+                    viewHolder.itemView.setBackgroundColor(0x30e4ecee);
+                    viewHolder.itemView.setScaleX(0.9f);
+                    viewHolder.itemView.setScaleY(0.9f);
+                }
+                super.onSelectedChanged(viewHolder, actionState);
+            }
+
+            @Override
+            public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                viewHolder.itemView.setBackgroundColor(0x99e4ecee);
+                viewHolder.itemView.setScaleX(1.0f);
+                viewHolder.itemView.setScaleY(1.0f);
+                super.clearView(recyclerView, viewHolder);
+            }
+
+        };
+        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(mCallback);
+        mItemTouchHelper.attachToRecyclerView(mList);
+        */
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            //通过返回值来设置是否处理某次拖曳或者滑动事件
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN |
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                int swipeFlags = 0;
+
+                    return makeMovementFlags(dragFlags, swipeFlags);
+
+            }
+            //当长按并进入拖曳状态时，拖曳的过程中不断的回调此方法，返回值为是否处理事件
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+
+                myAdapter.onItemMove(viewHolder.getAdapterPosition(),target.getAdapterPosition());
+
+                return true;
+            }
+            //滑动删除的回调
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+
+            @Override
+            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+                if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+                    //给被拖曳的 item 设置一个深颜色背景
+                    viewHolder.itemView.setBackgroundColor(0x30e4ecee);
+                    viewHolder.itemView.setScaleX(0.9f);
+                    viewHolder.itemView.setScaleY(0.9f);
+                }
+                super.onSelectedChanged(viewHolder, actionState);
+            }
+
+            @Override
+            public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                viewHolder.itemView.setBackgroundColor(0x00e4ecee);
+                viewHolder.itemView.setScaleX(1.0f);
+                viewHolder.itemView.setScaleY(1.0f);
+                super.clearView(recyclerView, viewHolder);
+                myAdapter.notifyDataSetChanged();
+            }
+
+
+        });
+        itemTouchHelper.attachToRecyclerView(mList);
+
+    }
+
+    public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+        private ArrayList<Navigation.ItemInfo> mData;
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            public TextView mTextView;
+            public ImageView mImage;
+            public ViewHolder(View v) {
+                super(v);
+                mTextView = (TextView) v.findViewById(R.id.ItemTextView);
+                mImage = (ImageView) v.findViewById(R.id.ItemImageView);
+            }
+        }
+
+        public MyAdapter(ArrayList<Navigation.ItemInfo> data) {
+
+
+                if (Application.Web == false){
+                    mData = data;
+                }else {
+                    mData = Application.mData;
+                    Application.Web = false;
+                }
+
+        }
+
+        @Override
+        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item, parent, false);
+            ViewHolder vh = new ViewHolder(v);
+            return vh;
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, final int position) {
+            //holder.mTextView.setText((CharSequence) mData.get(position));
+
+            holder.mTextView.setText(mData.get(position).mItemName);
+            holder.mImage.setImageResource(mData.get(position).mItemImage);
+            //短按
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e("短", mData.get(position).mItemName);
+
+                    switch (mData.get(position).mItemName){
+                        case "最新消息" :
+                            setmUri(0);
+                            break;
+                        case "基金淨值" :
+                            setmUri(1);
+                            break;
+                        case "優惠好康" :
+                            setmUri(2);
+                            break;
+                        case "基金交易" :
+                            setmUri(3);
+                            break;
+                        case "到價通知" :
+                            setmUri(4);
+                            break;
+                        case "關注基金" :
+                            setmUri(5);
+                            break;
+                        case "理財講堂" :
+                            setmUri(6);
+                            break;
+                        case "關於我們" :
+                            setmUri(7);
+                            break;
+                        case "線上客服" :
+                            setmUri(8);
+                            break;
+                        case "線上開戶" :
+                            setmUri(9);
+                            break;
+                        case "我要開戶" :
+                            setmUri(10);
+                            break;
+                        case "配息一欄表" :
+                            setmUri(11);
+                            break;
+                        case "基金手續費一欄表" :
+                            setmUri(12);
+                            break;
+                        case "理財講座報名查詢" :
+                            setmUri(13);
+                            break;
+                        case "投資試算" :
+                            setmUri(14);
+                            break;
+                    }
+                }
+            });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Log.e("長", String.valueOf(position));
+                    return true;
+                }
+            });
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return mData.size();
+        }
+
+
+        public void onItemMove(int fromPosition, int toPosition) {
+            //交换位置
+            Collections.swap(mData,fromPosition,toPosition);
+            notifyItemMoved(fromPosition,toPosition);
+            for(int i = 0 ; i<mData.size(); i++){
+                Log.e("mdata2",mData.get(i).mItemName);
+            }
+            Application.mData = mData;
+            Application.Login2 = true;
+        }
+    }
 }
 

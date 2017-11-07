@@ -21,6 +21,9 @@ public class Application extends android.app.Application {
     public static ArrayList<Integer> imageRes ;
     public static ArrayList<Navigation.ItemInfo> itemInfoArrayList4;
     public static boolean add ;
+    public static boolean Web = false ;
+    public static boolean Login2 = true ;
+    public static ArrayList<Navigation.ItemInfo> mData;
 
     /**
      * MainActivity
