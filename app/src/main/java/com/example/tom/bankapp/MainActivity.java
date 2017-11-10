@@ -416,7 +416,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
     }
-    private void setmArrayList() {
+    private void  setmArrayList() {
         //預設九宮格的功能
         itemName = new ArrayList<>();
         imageRes = new ArrayList<>();

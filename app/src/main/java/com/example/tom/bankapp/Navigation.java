@@ -59,6 +59,11 @@ import static com.example.tom.bankapp.R.drawable.f8;
 import static com.example.tom.bankapp.R.drawable.pig64;
 import static com.example.tom.bankapp.R.layout.item;
 
+
+/**
+ *
+ */
+
 public class Navigation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
 
@@ -67,6 +72,9 @@ public class Navigation extends AppCompatActivity
     GridView mGridView;
     MyAdapter myAdapter;
     private ArrayList<String> myDataset;
+
+
+    // 建立一個類別 把圖 文字 URL 放在一起
     public class ItemInfo {
         public String mItemName;
         public int mItemImage;
@@ -161,6 +169,7 @@ public class Navigation extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
 
+        Log.e("判斷", String.valueOf(Application.change));
 
         setItem();
         setmListView();
@@ -375,8 +384,7 @@ public class Navigation extends AppCompatActivity
 
     }
     private void setmArrayList() {
-        //預設九宮格的功能
-
+        //預設功能
         itemInfoArrayList4 = new ArrayList<>();
         //未登入
         if (Application.Login == false) {
@@ -431,10 +439,10 @@ public class Navigation extends AppCompatActivity
                         case "配息一欄表" :
                             checkItem(name11);
                             break;
-                        case "基金手續費一欄表" :
+                        case "基金手續費\n" + "一欄表" :
                             checkItem(name12);
                             break;
-                        case "理財講座報名查詢" :
+                        case "理財講座報\n" + "名查詢" :
                             checkItem(name13);
                             break;
                         case "投資試算" :
@@ -455,11 +463,11 @@ public class Navigation extends AppCompatActivity
                     mCheckSet.add(i);
                 }
             }
-
         }
     }
 
     private void checkItem(String name){
+
         for(int i2 = 0 ; i2<itemInfoArray.size() ; i2++){
             if(itemInfoArray.get(i2).mItemName.equals(name)){
                 mCheckSet.add(i2);
@@ -545,21 +553,22 @@ public class Navigation extends AppCompatActivity
         }
     }
 
-
+    //登入登出
     public void onLogin(View v){
         if(Application.Login == false){
             setmListView2();
             Intent it = new Intent(this , LoginActivity.class);
             startActivity(it);
+            Application.change = false;
             Navigation.this.finish();
 
         }else {
             setmListView2();
             Application.Login = false;
             Intent it = new Intent(this , Navigation.class);
-            Application.Web = false;
-            Application.Login2 = false;
             startActivity(it);
+            Application.change = false;
+            Application.add = false;
             Navigation.this.finish();
             overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
         }
@@ -591,11 +600,12 @@ public class Navigation extends AppCompatActivity
         linear3.setVisibility(View.VISIBLE);
         linear5.setVisibility(View.VISIBLE);
         linear4.setVisibility(View.GONE);
-
-        add = true;
+        add = true ;
         Application.add = add;
+        Application.change = false;
         //adapter.notifyDataSetChanged();
         myAdapter.notifyDataSetChanged();
+        Log.e("判斷2", String.valueOf(Application.change));
     }
     // 新增我的最愛的list
     private void setmListView2() {
@@ -652,14 +662,10 @@ public class Navigation extends AppCompatActivity
                         }
                         Application.itemInfoArrayList4 = itemInfoArrayList4;
                         Log.e("itemArray", String.valueOf(Application.itemInfoArrayList4));
-
-
                     }
                 });
 
             }
-
-
 
             return super.getView(position, convertView, parent);
         }
@@ -721,6 +727,8 @@ public class Navigation extends AppCompatActivity
         ScrollView linear5 = (ScrollView) findViewById(R.id.linear5);
         linear5.setBackgroundColor(0x99e4ecee);
     }
+
+    // 設定 全部的功能 和 登入前的功能
     private void setItem(){
         //全部
         itemInfoArray = new ArrayList<>();
@@ -737,15 +745,17 @@ public class Navigation extends AppCompatActivity
 
     }
 
-
+    //設定RecycleView
     private void setRecyclerView(){
-
+        //把功能放進recycleView裡
         if(itemInfoArrayList4.size()!=0){
             myAdapter = new MyAdapter(itemInfoArrayList4);
         }
 
         RecyclerView mList = (RecyclerView) findViewById(R.id.list_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+        //StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL); //瀑布流效果
+        //LinearLayoutManager layoutManager = new LinearLayoutManager(this);  //listview效果
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3); //Gridview效果
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         mList.setLayoutManager(layoutManager);
@@ -803,8 +813,10 @@ public class Navigation extends AppCompatActivity
             //通过返回值来设置是否处理某次拖曳或者滑动事件
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                //設定拖曳
                 int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN |
                         ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                //設定左右滑動
                 int swipeFlags = 0;
 
                     return makeMovementFlags(dragFlags, swipeFlags);
@@ -853,6 +865,7 @@ public class Navigation extends AppCompatActivity
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private ArrayList<Navigation.ItemInfo> mData;
 
+
         public class ViewHolder extends RecyclerView.ViewHolder {
             public TextView mTextView;
             public ImageView mImage;
@@ -864,19 +877,18 @@ public class Navigation extends AppCompatActivity
         }
 
         public MyAdapter(ArrayList<Navigation.ItemInfo> data) {
-
-
-                if (Application.Web == false){
-                    mData = data;
-                }else {
-                    mData = Application.mData;
-                    Application.Web = false;
-                }
+            //移動後的功能
+            if (Application.change == true){
+                mData = Application.mData;
+            }else {
+                mData = data;
+            }
 
         }
 
         @Override
         public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            //放入item.xml
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item, parent, false);
             ViewHolder vh = new ViewHolder(v);
@@ -885,7 +897,6 @@ public class Navigation extends AppCompatActivity
 
         @Override
         public void onBindViewHolder(ViewHolder holder, final int position) {
-            //holder.mTextView.setText((CharSequence) mData.get(position));
 
             holder.mTextView.setText(mData.get(position).mItemName);
             holder.mImage.setImageResource(mData.get(position).mItemImage);
@@ -893,7 +904,6 @@ public class Navigation extends AppCompatActivity
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("短", mData.get(position).mItemName);
 
                     switch (mData.get(position).mItemName){
                         case "最新消息" :
@@ -956,7 +966,8 @@ public class Navigation extends AppCompatActivity
 
         @Override
         public int getItemCount() {
-            return mData.size();
+
+           return mData.size();
         }
 
 
@@ -964,11 +975,10 @@ public class Navigation extends AppCompatActivity
             //交换位置
             Collections.swap(mData,fromPosition,toPosition);
             notifyItemMoved(fromPosition,toPosition);
-            for(int i = 0 ; i<mData.size(); i++){
-                Log.e("mdata2",mData.get(i).mItemName);
-            }
+
+            Application.change = true; //有調整位置
             Application.mData = mData;
-            Application.Login2 = true;
+
         }
     }
 }
